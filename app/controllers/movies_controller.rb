@@ -36,6 +36,19 @@ class MoviesController < ApplicationController
     @movies = Movie.find_all_by_rating(@selected_ratings.keys, ordering)
   end
 
+  def same_director
+    @movie = Movie.find_by_id( params[:id] )
+    if not @movie
+      flash[:notice] = "Could not find movie with id '#{params[:id]}'"
+      redirect_to movies_path
+    elsif @movie.director == nil || @movie.director == ""
+      flash[:notice] = "'#{@movie.title}' has no director info."
+      redirect_to movies_path
+    else
+      @movies = Movie.find_all_by_director( @movie.director )
+    end
+  end
+
   def new
     # default: render 'new' template
   end
